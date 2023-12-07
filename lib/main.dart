@@ -23,7 +23,7 @@ class Home extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 20),
         decoration: const BoxDecoration(
             image: DecorationImage(
-          image: AssetImage('assets/bg.jpg'),
+          image: AssetImage('assets/bg1.png'),
           fit: BoxFit.cover,
         )),
         child: Column(
@@ -37,7 +37,7 @@ class Home extends StatelessWidget {
                   padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
                   backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 255, 106, 0))),
               child: const Text(
-                'Registrarse',
+                'Llenar Formulario',
                 style: TextStyle(fontSize: 20),
               ),
             )

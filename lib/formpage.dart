@@ -18,14 +18,25 @@ class Formpage extends StatefulWidget {
 }
 
 List<String> list = <String>['Santo Domingo / Zona Este', 'Santiago / Zona Norte', 'Zona Sur'];
+List<String> list2 = <String>[
+  'Summer Work, USA 🇺🇸',
+  'Summer Work Camp 🏕 USA 🇺🇸',
+  'Pasantías pagadas en España 🇪🇸',
+  'Cursos de idiomas en el extranjero',
+  'Pasantías Pagadas en Asia',
+  'Campamentos de verano para jóvenes hasta 18 años',
+  'Programa EB3 (Residencia en Estados Unidos)',
+];
 
 class _FormpageState extends State<Formpage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   String residencia = list.first;
+  String programa = list2.first;
   String fileUrl = 'http://www.gratex.net/adecintl/pdf/brochureadec.pdf';
   String fileName = 'BrochureADEC2023.pdf';
   Duration cooldownDuration2 = const Duration(seconds: 5);
@@ -110,6 +121,16 @@ class _FormpageState extends State<Formpage> {
     );
   }).toList();
 
+  var listSorted2 = list2.map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+      value: value,
+      child: Text(
+        value,
+        style: const TextStyle(color: Colors.black),
+      ),
+    );
+  }).toList();
+
   void handleButtonClick() {
     if (_formKey.currentState?.validate() ?? false) {
       // Perform form validation here
@@ -162,12 +183,14 @@ class _FormpageState extends State<Formpage> {
       ..recipients.add('edwin@gratex.net')
       ..subject = 'Informacion de contacto'
       ..text = '''
-      Nombre: ${_nameController.text + _lastnameController.text}
+      Nombre: ${'${_nameController.text} ${_lastnameController.text}'}
       Email: ${_emailController.text}
       Telefono: ${_phoneNumberController.text}
+      Edad: ${_ageController.text}
+      Programa de interes: $programa
       ''';
     final recipentsMessage = Message()
-      ..from = const Address('omareogm09@gmail.com', 'edwin')
+      ..from = const Address('omareogm09@gmail.com', 'Adec')
       ..recipients.add(_emailController.text)
       ..recipients.add('omareogm09@gmail.com')
       ..subject = 'Form Submission'
@@ -226,6 +249,8 @@ class _FormpageState extends State<Formpage> {
   }
 
   late VideoPlayerController _controller;
+
+  @override
   void initState() {
     super.initState();
 
@@ -245,6 +270,7 @@ class _FormpageState extends State<Formpage> {
   }
 
   String dropdownValue = list.first;
+  String dropdownValue2 = list2.first;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -361,6 +387,7 @@ class _FormpageState extends State<Formpage> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly, // Allow only digits
                     LengthLimitingTextInputFormatter(12),
+                    LengthLimitingTextInputFormatter(10),
                   ],
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -377,9 +404,30 @@ class _FormpageState extends State<Formpage> {
                     if (value!.isEmpty) {
                       return 'Campo vacío';
                     }
-
                     return null;
                   },
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  style: const TextStyle(color: Colors.white),
+                  controller: _ageController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly, // Allow only digits
+                    LengthLimitingTextInputFormatter(2),
+                  ],
+                  decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                    ),
+                    labelText: 'Edad',
+                    hintText: 'Edad',
+                    labelStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.pin_outlined, color: Colors.white),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {},
                 ),
                 const SizedBox(height: 16.0),
                 DropdownButtonFormField(
@@ -403,6 +451,31 @@ class _FormpageState extends State<Formpage> {
                   items: listSorted,
                   onChanged: (value) {
                     residencia = value.toString();
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                DropdownButtonFormField(
+                  decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0),
+                    ),
+                    labelText: 'Programa de interes',
+                    hintText: 'Programa de interes',
+                    labelStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.present_to_all, color: Colors.white),
+                    border: OutlineInputBorder(),
+                  ),
+                  value: dropdownValue2,
+                  selectedItemBuilder: (BuildContext ctxt) {
+                    return list2.map<Widget>((item) {
+                      return DropdownMenuItem(
+                          value: item, child: Text(item, style: const TextStyle(color: Colors.white)));
+                    }).toList();
+                  },
+                  items: listSorted2,
+                  isExpanded: true,
+                  onChanged: (value) {
+                    programa = value.toString();
                   },
                 ),
                 const SizedBox(height: 16.0),
